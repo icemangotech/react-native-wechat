@@ -5,7 +5,7 @@
 [React Native] bridging library that integrates WeChat SDKs:
 
 - [x] iOS SDK 1.8.5
-- [x] Android SDK 221
+- [x] Android SDK 5.4.3
 
 [react-native-wechat] has the following tracking data in the open source world:
 
@@ -53,7 +53,7 @@ WeChat.registerApp('appid');
 
 This method is only available on iOS.
 
-#### isWXAppInstalled() 
+#### isWXAppInstalled()
 
 - returns {Boolean} if WeChat is installed.
 
@@ -73,7 +73,7 @@ Get the WeChat SDK api version.
 
 #### openWXApp()
 
-- returns {Boolean} 
+- returns {Boolean}
 
 Open the WeChat app from your application.
 
@@ -83,7 +83,7 @@ Open the WeChat app from your application.
 - `state` {String} the state of OAuth2
 - returns {Object}
 
-Send authentication request, and it returns an object with the 
+Send authentication request, and it returns an object with the
 following fields:
 
 | field   | type   | description                         |
@@ -98,7 +98,7 @@ following fields:
 
 #### class `ShareMetadata`
 
-- `title` {String}  title of this message. 
+- `title` {String}  title of this message.
 - `type` {Number} type of this message. Can be {news|text|imageUrl|imageFile|imageResource|video|audio|file}
 - `thumbImage` {String} Thumb image of the message, which can be a uri or a resource id.
 - `description` {String} The description about the sharing.
@@ -131,7 +131,7 @@ let resolveAssetSource = require('resolveAssetSource');
 // Code example to share text message:
 try {
   let result = await WeChat.shareToTimeline({
-    type: 'text', 
+    type: 'text',
     description: 'hello, wechat'
   });
   console.log('share text message to time line successful:', result);
@@ -169,7 +169,7 @@ try {
   let rootPath = fs.DocumentDirectoryPath;
   let savePath = rootPath + '/email-signature-262x100.png';
   console.log(savePath);
-  
+
   /*
    * savePath on iOS may be:
    *  /var/mobile/Containers/Data/Application/B1308E13-35F1-41AB-A20D-3117BE8EE8FE/Documents/email-signature-262x100.png
@@ -227,7 +227,7 @@ try {
   /*
    * savePath on iOS may be:
    *  /var/mobile/Containers/Data/Application/B1308E13-35F1-41AB-A20D-3117BE8EE8FE/Documents/signature_method.doc
-   **/ 
+   **/
   let savePath = rootPath + '/' + fileName;
 
   await fs.downloadFile('https://open.weixin.qq.com/zh_CN/htmledition/res/assets/signature_method.doc', savePath);
