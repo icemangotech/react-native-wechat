@@ -1,27 +1,40 @@
-'use strict';
-
-import { NativeEventEmitter, NativeModules, Platform } from 'react-native';
+import { NativeEventEmitter, NativeModules } from 'react-native';
 import { EventEmitter } from 'events';
 
 let isAppRegistered = false;
 const { WeChat } = NativeModules;
 const WXEventEmitter = new NativeEventEmitter(WeChat);
 
-interface BaseResponse {
-  errCode: number;
+export enum WXErrCode {
+  /** 成功 */
+  WXSuccess = 0,
+  /** 普通错误类型 */
+  WXErrCodeCommon = -1,
+  /** 用户点击取消并返回 */
+  WXErrCodeUserCancel = -2,
+  /** 发送失败 */
+  WXErrCodeSentFail = -3,
+  /** 授权失败 */
+  WXErrCodeAuthDeny = -4,
+  /** 微信不支持 */
+  WXErrCodeUnsupport = -5,
+}
+
+export interface BaseResponse {
+  errCode: WXErrCode;
   errStr?: string;
 }
 
-interface ShareResponse extends BaseResponse {
+export interface ShareResponse extends BaseResponse {
   lang: string;
   country: string;
 }
 
-interface PayResponse extends BaseResponse {
+export interface PayResponse extends BaseResponse {
   returnKey: string;
 }
 
-interface AuthResponse extends BaseResponse {
+export interface AuthResponse extends BaseResponse {
   openId?: string;
   code?: string;
   url?: string;
@@ -119,6 +132,7 @@ export const isWXAppInstalled = () =>
 
 /**
  * Return if the wechat application supports the api
+ * @platform iOS
  * @method isWXAppSupportApi
  * @return {Promise}
  */
@@ -151,7 +165,6 @@ export const openWXApp = () => wrapApi(WeChat.openWXApp)();
 const nativeShareToTimeline = wrapApi(WeChat.shareToTimeline);
 const nativeShareToSession = wrapApi(WeChat.shareToSession);
 const nativeShareToFavorite = wrapApi(WeChat.shareToFavorite);
-const nativeSendAuthRequest = wrapApi(WeChat.sendAuthRequest);
 
 export function sendAuthRequest(scopes: string, state?: string) {
   return new Promise<AuthResponse>((resolve, reject) => {
@@ -167,7 +180,7 @@ export function sendAuthRequest(scopes: string, state?: string) {
 }
 
 export function shareToTimeline(data: ShareMetadata) {
-  return new Promise((resolve, reject) => {
+  return new Promise<ShareResponse>((resolve, reject) => {
     nativeShareToTimeline(data);
     emitter.once('SendMessageToWX.Resp', resp => {
       if (resp.errCode === 0) {
@@ -180,7 +193,7 @@ export function shareToTimeline(data: ShareMetadata) {
 }
 
 export function shareToSession(data: ShareMetadata) {
-  return new Promise((resolve, reject) => {
+  return new Promise<ShareResponse>((resolve, reject) => {
     nativeShareToSession(data);
     emitter.once('SendMessageToWX.Resp', resp => {
       if (resp.errCode === 0) {
@@ -193,7 +206,7 @@ export function shareToSession(data: ShareMetadata) {
 }
 
 export function shareToFavorite(data: ShareMetadata) {
-  return new Promise((resolve, reject) => {
+  return new Promise<ShareResponse>((resolve, reject) => {
     nativeShareToFavorite(data);
     emitter.once('SendMessageToWX.Resp', resp => {
       if (resp.errCode === 0) {
