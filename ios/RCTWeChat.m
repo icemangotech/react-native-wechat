@@ -360,7 +360,7 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
 	    body[@"lang"] = r.lang;
 	    body[@"country"] =r.country;
 	    body[@"type"] = @"SendMessageToWX.Resp";
-	    [self.bridge.eventDispatcher sendDeviceEventWithName:RCTWXEventName body:body];
+        [self sendEventWithName:RCTWXEventName body:body];
 	} else if ([resp isKindOfClass:[SendAuthResp class]]) {
 	    SendAuthResp *r = (SendAuthResp *)resp;
 	    NSMutableDictionary *body = @{@"errCode":@(r.errCode)}.mutableCopy;
@@ -372,23 +372,28 @@ RCT_EXPORT_METHOD(pay:(NSDictionary *)data
     
 	    if (resp.errCode == WXSuccess) {
 	        if (self.appId && r) {
-		    // ios第一次获取不到appid会卡死，加个判断OK		
-		    [body addEntriesFromDictionary:@{@"appid":self.appId, @"code":r.code}];
-		    [self.bridge.eventDispatcher sendDeviceEventWithName:RCTWXEventName body:body];
-	        }
-	    }
-	    else {
-	        [self.bridge.eventDispatcher sendDeviceEventWithName:RCTWXEventName body:body];
+                // ios第一次获取不到appid会卡死，加个判断OK
+                [body addEntriesFromDictionary:@{@"appid":self.appId, @"code":r.code}];
+                [self sendEventWithName:RCTWXEventName body:body];
+            }
+	    }  else {
+            [self sendEventWithName:RCTWXEventName body:body];
 	    }
 	} else if ([resp isKindOfClass:[PayResp class]]) {
-	        PayResp *r = (PayResp *)resp;
-	        NSMutableDictionary *body = @{@"errCode":@(r.errCode)}.mutableCopy;
-	        body[@"errStr"] = r.errStr;
-	        body[@"type"] = @(r.type);
-	        body[@"returnKey"] =r.returnKey;
-	        body[@"type"] = @"PayReq.Resp";
-	        [self.bridge.eventDispatcher sendDeviceEventWithName:RCTWXEventName body:body];
-    	}
+        PayResp *r = (PayResp *)resp;
+        NSMutableDictionary *body = @{@"errCode":@(r.errCode)}.mutableCopy;
+        body[@"errStr"] = r.errStr;
+        body[@"type"] = @(r.type);
+        body[@"returnKey"] =r.returnKey;
+        body[@"type"] = @"PayReq.Resp";
+        [self sendEventWithName:RCTWXEventName body:body];
+    }
+}
+
+#pragma mark - send events
+
+- (NSArray<NSString *> *)supportedEvents {
+    return @[RCTWXEventName];
 }
 
 @end
