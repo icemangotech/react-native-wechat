@@ -31,35 +31,29 @@ export interface AuthResponse extends BaseResponse {
     country?: string;
 }
 export declare type ShareMetadata = {
+    thumbImage?: string;
+    title?: string;
+    description?: string;
+} & ({
     type: 'text';
     description: string;
 } | {
     type: 'news';
-    title: string;
-    description: string;
     webpageUrl: string;
 } | {
     type: 'audio';
-    title: string;
-    description: string;
     musicUrl: string;
 } | {
-    type: 'imageUrl';
-    title: string;
-    description: string;
+    type: 'imageUrl' | 'imageFile' | 'imageResource';
     imageUrl: string;
 } | {
     type: 'video';
-    title: string;
-    description: string;
     videoUrl: string;
 } | {
     type: 'file';
-    title: string;
-    description: string;
     filePath: string;
     fileExtension: string;
-};
+});
 declare function sendAuthRequest(scopes: string, state?: string): Promise<AuthResponse>;
 declare function shareToTimeline(data: ShareMetadata): Promise<ShareResponse>;
 declare function shareToSession(data: ShareMetadata): Promise<ShareResponse>;

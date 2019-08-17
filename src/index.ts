@@ -42,42 +42,36 @@ export interface AuthResponse extends BaseResponse {
   country?: string;
 }
 
-export type ShareMetadata =
+export type ShareMetadata = {
+  thumbImage?: string;
+  title?: string;
+  description?: string;
+} & (
   | {
       type: 'text';
       description: string;
     }
   | {
       type: 'news';
-      title: string;
-      description: string;
       webpageUrl: string;
     }
   | {
       type: 'audio';
-      title: string;
-      description: string;
       musicUrl: string;
     }
   | {
-      type: 'imageUrl';
-      title: string;
-      description: string;
+      type: 'imageUrl' | 'imageFile' | 'imageResource';
       imageUrl: string;
     }
   | {
       type: 'video';
-      title: string;
-      description: string;
       videoUrl: string;
     }
   | {
       type: 'file';
-      title: string;
-      description: string;
       filePath: string;
       fileExtension: string;
-    };
+    });
 
 // Event emitter to dispatch request and response from WeChat.
 const emitter = new EventEmitter();
