@@ -34,6 +34,9 @@ export declare type ShareMetadata = {
     thumbImage?: string;
     title?: string;
     description?: string;
+    mediaTagName?: string;
+    messageAction?: string;
+    messageExt?: string;
 } & ({
     type: 'text';
     description: string;
